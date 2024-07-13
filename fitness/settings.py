@@ -46,6 +46,8 @@ INSTALLED_APPS = [
     "comment",
     "gym_location",
     "food",
+    "task",
+    "django_apscheduler"
 ]
 
 MIDDLEWARE = [
@@ -183,3 +185,9 @@ CORS_ALLOW_HEADERS = (
 )
 
 SIMPLEUI_DEFAULT_THEME = 'layui.css'
+
+CELERY_BROKER_URL = "redis://:Hnhwyxwgx9@8.137.37.222:6379/0"
+CELERY_RESULT_BACKEND = "redis://:Hnhwyxwgx9@8.137.37.222:6379/0"
+CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers:DatabaseScheduler'
+
+TIME_ZONE = 'Asia/Shanghai'

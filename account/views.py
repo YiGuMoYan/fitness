@@ -39,7 +39,8 @@ def account_method(request):
         res = {
             "user_id": account["id"],
             "username": account["username"],
-            "email": account["email"]
+            "email": account["email"],
+            "comment": account["comment"]
         }
         return success_response(res)
     if request.method == "POST":

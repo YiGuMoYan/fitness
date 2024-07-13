@@ -8,6 +8,7 @@ class Account(models.Model):
     phone = models.TextField(null=True)
     password = models.TextField(null=True)
     create_time = models.DateTimeField(auto_now_add=True)
+    comment = models.TextField(null=True)
 
     class Meta:
         db_table = "account"
