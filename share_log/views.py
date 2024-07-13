@@ -5,6 +5,7 @@ from account.models import Account
 from comment.models import Comment
 from fitness.settings import MEDIA_ROOT
 from share_log.models import Share
+from utils.crypt import decrypt
 from utils.response import *
 
 
@@ -34,10 +35,11 @@ def upload(request):
 
 def share_method(request):
     if request.method == "POST":
-        user_id = request.POST["user_id"]
-        title = request.POST["title"]
-        content = request.POST["content"]
-        image = request.POST["image"]
+        data = decrypt(request.body)
+        user_id = data["user_id"]
+        title = data["title"]
+        content = data["content"]
+        image = data["image"]
         Share.objects.create(user_id=user_id, title=title, content=content, image=image)
         return success_response()
     if request.method == "GET":
@@ -82,11 +84,12 @@ def delete(request):
 
 def update(request):
     if request.method == "POST":
-        id = request.POST["id"]
-        user_id = request.POST["user_id"]
-        title = request.POST["title"]
-        content = request.POST["content"]
-        image = request.POST["image"]
+        data = decrypt(request.body)
+        id = data["id"]
+        user_id = data["user_id"]
+        title = data["title"]
+        content = data["content"]
+        image = data["image"]
         share = Share.objects.filter(id=id, user_id=user_id).values()
         if share is None:
             return fail_response("无权限")

@@ -4,21 +4,23 @@ from django.shortcuts import render
 
 from diet.models import Diet
 from food.models import Food
+from utils.crypt import decrypt
 from utils.response import *
 
 
 # Create your views here.
 def diet_method(request):
     if request.method == "POST":
-        user_id = request.POST["user_id"]
-        record_date = datetime.datetime.strptime(request.POST["record_date"], '%Y-%m-%d')
-        breakfast = request.POST["breakfast"]
-        breakfast_weight = float(request.POST["breakfast_weight"])
-        lunch = request.POST["lunch"]
-        lunch_weight = float(request.POST["lunch_weight"])
-        dinner = request.POST["dinner"]
-        dinner_weight = float(request.POST["dinner_weight"])
-        note = request.POST["note"]
+        data = decrypt(request.body)
+        user_id = data["user_id"]
+        record_date = datetime.datetime.strptime(data["record_date"], '%Y-%m-%d')
+        breakfast = data["breakfast"]
+        breakfast_weight = float(data["breakfast_weight"])
+        lunch = data["lunch"]
+        lunch_weight = float(data["lunch_weight"])
+        dinner = data["dinner"]
+        dinner_weight = float(data["dinner_weight"])
+        note = data["note"]
 
         breakfast_heat = Food.objects.filter(name=breakfast).first().heat * breakfast_weight
         lunch_heat = Food.objects.filter(name=lunch).first().heat * lunch_weight
@@ -45,19 +47,20 @@ def diet_method(request):
 
 def update(request):
     if request.method == "POST":
-        id = request.POST["id"]
-        user_id = request.POST["user_id"]
+        data = decrypt(request.body)
+        id = data["id"]
+        user_id = data["user_id"]
         diet = Diet.objects.filter(id=id, user_id=user_id).first()
         if diet is None:
             return fail_response("记录不存在")
-        diet.record_date = datetime.datetime.strptime(request.POST["record_date"], '%Y-%m-%d')
-        diet.breakfast = request.POST["breakfast"]
-        diet.breakfast_weight = float(request.POST["breakfast_weight"])
-        diet.lunch = request.POST["lunch"]
-        diet.lunch_weight = float(request.POST["lunch_weight"])
-        diet.dinner = request.POST["dinner"]
-        diet.dinner_weight = float(request.POST["dinner_weight"])
-        diet.note = request.POST["note"]
+        diet.record_date = datetime.datetime.strptime(data["record_date"], '%Y-%m-%d')
+        diet.breakfast = data["breakfast"]
+        diet.breakfast_weight = float(data["breakfast_weight"])
+        diet.lunch = data["lunch"]
+        diet.lunch_weight = float(data["lunch_weight"])
+        diet.dinner = data["dinner"]
+        diet.dinner_weight = float(data["dinner_weight"])
+        diet.note = data["note"]
 
         diet.breakfast_heat = Food.objects.filter(name=diet.breakfast).first().heat * diet.breakfast_weight
         diet.lunch_heat = Food.objects.filter(name=diet.lunch).first().heat * diet.lunch_weight

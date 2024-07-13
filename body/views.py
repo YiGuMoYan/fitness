@@ -1,16 +1,18 @@
 import datetime
 
 from body.models import Body
+from utils.crypt import decrypt
 from utils.response import *
 
 
 # Create your views here.
 def body_method(request):
     if request.method == "POST":
-        user_id = request.POST["user_id"]
-        record_date = datetime.datetime.strptime(request.POST["record_date"], '%Y-%m-%d')
-        height = request.POST["height"]
-        weight = request.POST["weight"]
+        data = decrypt(request.body)
+        user_id = data["user_id"]
+        record_date = datetime.datetime.strptime(data["record_date"], '%Y-%m-%d')
+        height = data["height"]
+        weight = data["weight"]
 
         Body.objects.create(user_id=user_id, record_date=record_date, height=height, weight=weight)
         return success_response()
@@ -28,14 +30,15 @@ def body_method(request):
 
 def update(request):
     if request.method == "POST":
-        id = request.POST["id"]
-        user_id = request.POST["user_id"]
+        data = decrypt(request.body)
+        id = data["id"]
+        user_id = data["user_id"]
         body = Body.objects.filter(id=id, user_id=user_id).first()
         if body is None:
             return fail_response("记录不存在")
-        body.record_date = datetime.datetime.strptime(request.POST["record_date"], '%Y-%m-%d')
-        body.height = request.POST["height"]
-        body.weight = request.POST["weight"]
+        body.record_date = datetime.datetime.strptime(data["record_date"], '%Y-%m-%d')
+        body.height = data["height"]
+        body.weight = data["weight"]
         body.save()
         return success_response()
 

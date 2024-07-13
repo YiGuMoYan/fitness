@@ -5,13 +5,14 @@ from urllib.parse import parse_qs
 from django.shortcuts import render
 
 from training_log.models import TrainingLog
+from utils.crypt import decrypt
 from utils.response import *
 
 
 # Create your views here.
 def training_log_method(request):
     if request.method == "POST":
-        user_id = request.POST.get("user_id")
+        user_id = request.POST["user_id"]
         date = datetime.datetime.strptime(request.POST.get("date"), '%Y-%m-%d')
 
         # 获取前端传递的数据
@@ -74,8 +75,8 @@ def training_log_list(request):
 
 def training_log_delete(request):
     if request.method == "POST":
-        date = request.POST.get("date")
-        user_id = request.POST.get("user_id")
+        date = request.POST["date"]
+        user_id = request.POST["user_id"]
         TrainingLog.objects.filter(user_id=user_id, date=date).delete()
         return success_response()
     return fail_response()

@@ -1,5 +1,6 @@
 from account.models import Account
 from comment.models import Comment
+from utils.crypt import decrypt
 from utils.response import *
 
 
@@ -25,9 +26,10 @@ def get_comment(request):
 
 def add_comment(request):
     if request.method == "POST":
-        user_id = request.POST["user_id"]
-        share_id = request.POST["share_id"]
-        content = request.POST["content"]
+        data = decrypt(request.body)
+        user_id = data["user_id"]
+        share_id = data["share_id"]
+        content = data["content"]
         Comment.objects.create(user_id=user_id, share_id=share_id, content=content)
         return success_response()
     return fail_response()

@@ -1,11 +1,13 @@
 from account.models import Account
+from utils.crypt import decrypt
 from utils.response import *
 
 
 def login(request):
     if request.method == "POST":
-        email = request.POST["email"]
-        password = request.POST["password"]
+        data = decrypt(request.body)
+        email = data["email"]
+        password = data["password"]
         if not Account.objects.filter(email=email).exists():
             return fail_response("用户名不存在")
         account = Account.objects.filter(email=email).first()
@@ -17,9 +19,10 @@ def login(request):
 
 def signup(request):
     if request.method == "POST":
-        username = request.POST["username"]
-        password = request.POST["password"]
-        email = request.POST["email"]
+        data = decrypt(request.body)
+        username = data["username"]
+        password = data["password"]
+        email = data["email"]
         if Account.objects.filter(username=username).exists():
             return fail_response("用户名已存在")
         account = Account.objects.create(username=username, password=password, email=email)
@@ -40,9 +43,10 @@ def account_method(request):
         }
         return success_response(res)
     if request.method == "POST":
-        user_id = request.POST["user_id"]
-        username = request.POST["username"]
-        email = request.POST["email"]
+        data = decrypt(request.body)
+        user_id = data["user_id"]
+        username = data["username"]
+        email = data["email"]
         account = Account.objects.filter(id=user_id).first()
         if account is None:
             return fail_response("用户不存在")
@@ -55,9 +59,10 @@ def account_method(request):
 
 def update_password(request):
     if request.method == "POST":
-        user_id = request.POST["user_id"]
-        old_password = request.POST["old_password"]
-        new_password = request.POST["new_password"]
+        data = decrypt(request.body)
+        user_id = data["user_id"]
+        old_password = data["old_password"]
+        new_password = data["new_password"]
         account = Account.objects.filter(id=user_id).first()
         if account is None:
             return fail_response("用户不存在")
