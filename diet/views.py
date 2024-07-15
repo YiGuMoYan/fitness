@@ -27,8 +27,10 @@ def diet_method(request):
         dinner_heat = Food.objects.filter(name=dinner).first().heat * dinner_weight
 
         sum_heat = breakfast_heat + lunch_heat + dinner_heat
-        Diet.objects.create(user_id=user_id, record_date=record_date, breakfast=breakfast, breakfast_weight=breakfast_weight,
-                            breakfast_heat=breakfast_heat, lunch=lunch, lunch_weight=lunch_weight, lunch_heat=lunch_heat,
+        Diet.objects.create(user_id=user_id, record_date=record_date, breakfast=breakfast,
+                            breakfast_weight=breakfast_weight,
+                            breakfast_heat=breakfast_heat, lunch=lunch, lunch_weight=lunch_weight,
+                            lunch_heat=lunch_heat,
                             dinner=dinner, dinner_weight=dinner_weight, dinner_heat=dinner_heat, note=note,
                             sum=sum_heat)
 
