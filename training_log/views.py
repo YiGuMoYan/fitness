@@ -3,6 +3,7 @@ import json
 from urllib.parse import parse_qs
 
 from django.shortcuts import render
+from django.utils.timezone import make_aware, get_current_timezone
 
 from training_log.models import TrainingLog
 from utils.crypt import decrypt
@@ -14,7 +15,7 @@ def training_log_method(request):
     if request.method == "POST":
         user_id = request.POST["user_id"]
         date = datetime.datetime.strptime(request.POST.get("date"), '%Y-%m-%d')
-
+        # date = make_aware(date, get_current_timezone())
         # 获取前端传递的数据
         data_string = request.body.decode('utf-8')  # 解码请求体
         parsed_data = parse_qs(data_string)
@@ -77,6 +78,7 @@ def training_log_delete(request):
     if request.method == "POST":
         date = request.POST["date"]
         user_id = request.POST["user_id"]
-        TrainingLog.objects.filter(user_id=user_id, date=date).delete()
+        date = datetime.datetime.strptime(date, "%Y-%m-%d")
+        TrainingLog.objects.filter(user_id=user_id, date=date.date()).delete()
         return success_response()
     return fail_response()

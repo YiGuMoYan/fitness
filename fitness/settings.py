@@ -191,3 +191,5 @@ CELERY_RESULT_BACKEND = "redis://:Hnhwyxwgx9@8.137.37.222:6379/0"
 CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers:DatabaseScheduler'
 
 TIME_ZONE = 'Asia/Shanghai'
+LANGUAGE_CODE = 'zh-hans'
+SIMPLEUI_LOGO = 'http://127.0.0.1:8000/media/logo.png'

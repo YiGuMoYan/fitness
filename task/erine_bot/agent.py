@@ -66,8 +66,10 @@ def save_account_comment(user_id, text):
 
 
 async def run():
+    print("start")
     account_id_list = await sync_to_async(get_account_ids)()
     for account_id in account_id_list:
+        print(account_id)
         params = "当前用户近期的身体身高与体重为："
         body_records = await sync_to_async(get_body_records)(account_id)
         for b in body_records:
@@ -86,5 +88,5 @@ async def run():
         await sync_to_async(save_account_comment)(account_id, text)
 
 
-# 运行异步任务
-asyncio.run(run())
+def run_async_task():
+    asyncio.run(run())

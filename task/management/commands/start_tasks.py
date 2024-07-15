@@ -1,3 +1,4 @@
+import asyncio
 from datetime import datetime
 
 from apscheduler.executors.pool import ThreadPoolExecutor
@@ -7,7 +8,7 @@ from django.conf import settings
 from django.core.management.base import BaseCommand
 from django_apscheduler.jobstores import DjangoJobStore
 
-from task.erine_bot.agent import run
+from task.erine_bot.agent import run, run_async_task
 
 
 class Command(BaseCommand):
@@ -25,17 +26,17 @@ class Command(BaseCommand):
         scheduler.executor = executor
 
         # 注册定义任务
-        id_print_task = 'print_task__job'
+        id_print_task = 'print_task_job'
         print('开始-增加任务({})'.format(id_print_task))
 
         # 使用 CronTrigger 设置每天20:50执行任务
         scheduler.add_job(
-            run,
+            run_async_task,
             id=id_print_task,
             name=id_print_task,
             max_instances=1,
             replace_existing=True,
-            trigger=CronTrigger(hour=24, minute=00, second=0, timezone=settings.TIME_ZONE),
+            trigger=CronTrigger(hour=24, minute=0, second=0, timezone=settings.TIME_ZONE),
         )
         print('完成-增加任务({})'.format(id_print_task))
 
